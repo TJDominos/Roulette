@@ -221,16 +221,9 @@ const App = () => {
 
     return (
         <div className="relative w-full h-screen bg-[#0f172a] text-white font-sans select-none overflow-hidden">
-            <div className="absolute inset-0 flex flex-col overflow-y-auto lg:overflow-hidden [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+            <div className="absolute inset-0 flex flex-col overflow-x-hidden overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                 
-                {/* Mobile Roulette (Hidden on Desktop) */}
-                <div className="lg:hidden flex-shrink-0 flex items-center justify-center w-full min-h-[220px] sm:min-h-[250px] z-0 relative mt-4">
-                    <div className="transform scale-[0.60] sm:scale-75 transition-transform duration-500 origin-center -my-8 sm:-my-4">
-                        <RouletteWheel3D rotation={rotation} lastNumber={lastNum} spinDuration={SPIN_DURATION} />
-                    </div>
-                </div>
-
-                <div className="flex-shrink-0 z-20">
+                <div className="flex-shrink-0 z-10 relative">
                     <NavBar 
                         onExit={() => window.location.reload()} 
                         isMuted={muted} 
@@ -249,24 +242,23 @@ const App = () => {
                 </div>
 
                 {/* Content Container */}
-                <main className="flex-1 w-full max-w-[1800px] mx-auto p-2 sm:p-4 lg:p-8 flex flex-col lg:flex-row items-stretch justify-center gap-2 lg:gap-16 lg:overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                <main className="flex-1 w-full max-w-[1800px] mx-auto px-2 py-0 sm:px-4 sm:py-2 lg:p-4 flex flex-col lg:flex-row items-stretch justify-center gap-1 lg:gap-8 overflow-visible">
                     
                     {/* Left Section (Wheel & Stats) */}
-                    <div className="flex-shrink-0 flex flex-col items-center lg:items-center justify-between lg:justify-end z-0 relative lg:w-[500px] lg:gap-8">
-                        {/* Desktop Roulette (Hidden on Mobile) */}
-                        <div className="hidden lg:flex flex-shrink-0 lg:flex-none items-center justify-center w-full lg:mb-28 min-h-[250px] sm:min-h-[300px]">
-                            <div className="transform scale-[0.65] sm:scale-75 md:scale-90 lg:scale-110 xl:scale-125 transition-transform duration-500 origin-center -my-6 sm:my-0">
+                    <div className="flex-shrink-0 flex flex-col items-center lg:items-center z-50 relative lg:w-[500px] lg:gap-4">
+                        <div className="flex-1 flex items-center justify-center w-full h-[200px] sm:h-[230px] md:h-[280px] lg:h-[360px] my-2 sm:my-4 lg:my-0">
+                            <div className="transform scale-[0.85] sm:scale-75 md:scale-90 lg:scale-95 xl:scale-100 transition-transform duration-500 origin-center">
                                 <RouletteWheel3D rotation={rotation} lastNumber={lastNum} spinDuration={SPIN_DURATION} />
                             </div>
                         </div>
                         
-                        <div className="hidden lg:block w-full">
+                        <div className="hidden lg:block w-full mt-auto">
                             <HistoryPanel history={history} stats={stats} onShowStats={() => setShowStats(true)} />
                         </div>
                     </div>
 
                     {/* Right Section (Board & Controls) */}
-                    <div className="shrink-0 lg:flex-1 w-full max-w-[700px] flex flex-col gap-1.5 sm:gap-4 lg:gap-8 lg:h-auto justify-end lg:justify-end z-10 pb-1 lg:pb-0">
+                    <div className="shrink-0 lg:flex-1 w-full max-w-[700px] mx-auto lg:mx-0 flex flex-col gap-1.5 sm:gap-3 lg:gap-6 lg:h-auto justify-center lg:justify-end z-10 pb-1 lg:pb-0">
                         <div className="lg:hidden w-full">
                             <HistoryPanel history={history} stats={stats} onShowStats={() => setShowStats(true)} />
                         </div>

@@ -17,7 +17,7 @@ export const CasinoChip: React.FC<ChipProps> = ({ value, className = "", size = 
         lg: "w-12 h-12 text-sm ring-[3px]",
         board: "w-[16px] h-[16px] text-[6px] ring-1 sm:w-[20px] sm:h-[20px] sm:text-[7px] md:w-[24px] md:h-[24px] md:text-[8px]",
         // Optimized selector size for new control panel
-        selector: "w-[26px] h-[26px] text-[9px] ring-1 sm:w-12 sm:h-12 sm:text-[11px] md:w-14 md:h-14 md:text-sm"
+        selector: "w-[26px] h-[26px] text-[9px] ring-1 sm:w-10 sm:h-10 sm:text-[10px] md:w-12 md:h-12 md:text-[11px] lg:w-14 lg:h-14 lg:text-sm"
     };
 
     const currentSizeClass = sizeClasses[size] || sizeClasses.md;
@@ -451,15 +451,15 @@ export const ControlPanel: React.FC<{
     const progress = (timeLeft / maxTime) * 100;
 
     return (
-        <div className="w-full max-w-3xl mx-auto flex flex-col gap-3 relative z-20">
+        <div className="w-full max-w-3xl mx-auto flex flex-col gap-2 sm:gap-3 relative z-20 pb-2 sm:pb-0">
             {/* Status Window - Centered above, floating, pill-shaped */}
-            <div className="self-center flex items-center gap-4 bg-slate-900/90 border border-white/10 px-8 py-2.5 rounded-full shadow-2xl backdrop-blur-md min-w-[240px] justify-center transition-all">
-                 <div className={`text-sm sm:text-base font-black uppercase tracking-widest ${phase === 'betting' ? 'text-yellow-400' : 'text-slate-200'}`}>
+            <div className="self-center flex items-center gap-2 sm:gap-4 bg-slate-900/90 border border-white/10 px-4 sm:px-8 py-1.5 sm:py-2.5 rounded-full shadow-2xl backdrop-blur-md min-w-[180px] sm:min-w-[240px] justify-center transition-all">
+                 <div className={`text-xs sm:text-base font-black uppercase tracking-widest ${phase === 'betting' ? 'text-yellow-400' : 'text-slate-200'}`}>
                     {phase === 'betting' ? 'Place Your Bets' : phase === 'locked' ? 'No More Bets' : phase === 'spinning' ? 'Spinning...' : 'Winning Number'}
                  </div>
                  {phase === 'betting' && (
-                     <div className="flex items-center gap-1.5 text-white font-mono font-bold bg-white/10 px-2 py-0.5 rounded">
-                        <Clock size={14} className="text-yellow-400"/>
+                     <div className="flex items-center gap-1 sm:gap-1.5 text-white font-mono font-bold bg-white/10 px-1.5 sm:px-2 py-0.5 rounded text-xs sm:text-base">
+                        <Clock size={12} className="text-yellow-400 sm:w-3.5 sm:h-3.5"/>
                         <span>{timeLeft}s</span>
                      </div>
                  )}
@@ -478,27 +478,27 @@ export const ControlPanel: React.FC<{
 
                 {/* Buttons and Chips Row - Single Zone */}
                 {/* Fixed height to prevent overflow issues with chips */}
-                <div className="flex items-center justify-between p-3 sm:p-4 gap-2 sm:gap-4 h-20 sm:h-24">
+                <div className="flex items-center justify-between p-1.5 sm:p-4 gap-1.5 sm:gap-4 h-14 sm:h-24">
                     
                     {/* Clear (Left) - White */}
                     <button 
                         onClick={clear}
                         disabled={!hasBets || phase !== 'betting'}
-                        className="w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center rounded-xl bg-slate-800/50 hover:bg-white/10 border border-white/5 hover:border-white/20 text-white transition-all active:scale-95 disabled:opacity-30 disabled:pointer-events-none"
+                        className="w-10 h-10 sm:w-16 sm:h-16 flex items-center justify-center rounded-xl bg-slate-800/50 hover:bg-white/10 border border-white/5 hover:border-white/20 text-white transition-all active:scale-95 disabled:opacity-30 disabled:pointer-events-none shrink-0"
                         title="Clear Bets (Esc)"
                     >
-                        <Trash2 size={24} />
+                        <Trash2 size={18} className="sm:w-6 sm:h-6" />
                     </button>
 
                     {/* Chips (Center) */}
-                    <div className="flex-1 flex justify-center items-center gap-2 sm:gap-4 lg:gap-6 overflow-x-auto scrollbar-hide py-2 h-full">
+                    <div className="flex-1 flex justify-center items-center gap-1.5 sm:gap-3 lg:gap-6 overflow-x-auto scrollbar-hide py-0.5 sm:py-2 h-full">
                         {CHIP_VALUES.map(v => (
                             <button
                                 key={v}
                                 onClick={() => setChip(v)}
                                 className={`
                                     relative transition-all duration-200 shrink-0
-                                    ${chip === v ? '-translate-y-1.5 scale-110' : 'hover:-translate-y-1 hover:scale-105 opacity-80 hover:opacity-100'}
+                                    ${chip === v ? '-translate-y-1 sm:-translate-y-1.5 scale-110' : 'hover:-translate-y-1 hover:scale-105 opacity-80 hover:opacity-100'}
                                 `}
                             >
                                 <CasinoChip 
@@ -514,10 +514,10 @@ export const ControlPanel: React.FC<{
                     <button 
                         onClick={undo}
                         disabled={!hasBets || phase !== 'betting'}
-                        className="w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center rounded-xl bg-slate-800/50 hover:bg-white/10 border border-white/5 hover:border-white/20 text-white transition-all active:scale-95 disabled:opacity-30 disabled:pointer-events-none"
+                        className="w-10 h-10 sm:w-16 sm:h-16 flex items-center justify-center rounded-xl bg-slate-800/50 hover:bg-white/10 border border-white/5 hover:border-white/20 text-white transition-all active:scale-95 disabled:opacity-30 disabled:pointer-events-none shrink-0"
                         title="Undo Last Bet (Del/Bksp)"
                     >
-                        <Undo2 size={24} />
+                        <Undo2 size={18} className="sm:w-6 sm:h-6" />
                     </button>
                 </div>
             </div>

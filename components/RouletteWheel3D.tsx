@@ -22,30 +22,30 @@ const RouletteWheel3D: React.FC<{rotation: number; lastNumber: number | null; sp
     []);
 
     return (
-        <div className="relative flex items-center justify-center" style={{ perspective: '800px' }}>
+        <div className="relative flex items-center justify-center w-[226px] h-[226px] sm:w-[288px] sm:h-[288px] lg:w-[368px] lg:h-[368px]" style={{ perspective: '800px' }}>
             {/* Outer wooden frame - Thinner rim */}
             <div 
-                className="absolute w-[226px] h-[226px] sm:w-[288px] sm:h-[288px] lg:w-[368px] lg:h-[368px] rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.8)]" 
+                className="absolute inset-0 m-auto w-[226px] h-[226px] sm:w-[288px] sm:h-[288px] lg:w-[368px] lg:h-[368px] rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.8)]" 
                 style={{ transform: 'rotateX(20deg)', background: 'linear-gradient(to bottom, #78350f, #451a03)' }} 
             />
             {/* Inner wooden ring */}
             <div 
-                className="absolute w-[222px] h-[222px] sm:w-[282px] sm:h-[282px] lg:w-[360px] lg:h-[360px] rounded-full border-4 border-[#5d2606]" 
+                className="absolute inset-0 m-auto w-[222px] h-[222px] sm:w-[282px] sm:h-[282px] lg:w-[360px] lg:h-[360px] rounded-full border-4 border-[#5d2606]" 
                 style={{ transform: 'rotateX(20deg)', background: 'linear-gradient(to bottom, #92400e, #78350f)' }} 
             />
             {/* Chrome rim */}
             <div 
-                className="absolute w-[218px] h-[218px] sm:w-[276px] sm:h-[276px] lg:w-[352px] lg:h-[352px] rounded-full shadow-inner" 
+                className="absolute inset-0 m-auto w-[218px] h-[218px] sm:w-[276px] sm:h-[276px] lg:w-[352px] lg:h-[352px] rounded-full shadow-inner" 
                 style={{ transform: 'rotateX(20deg)', background: 'linear-gradient(135deg, #e5e7eb 0%, #9ca3af 50%, #4b5563 100%)' }} 
             />
             {/* Ball track */}
             <div 
-                className="absolute w-[214px] h-[214px] sm:w-[270px] sm:h-[270px] lg:w-[346px] lg:h-[346px] rounded-full shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]" 
+                className="absolute inset-0 m-auto w-[214px] h-[214px] sm:w-[270px] sm:h-[270px] lg:w-[346px] lg:h-[346px] rounded-full shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]" 
                 style={{ transform: 'rotateX(20deg)', background: 'conic-gradient(from 180deg, #27272a, #18181b)' }} 
             />
             
             {/* Main Wheel - Larger to reduce gap */}
-            <div className="relative w-[210px] h-[210px] sm:w-[265px] sm:h-[265px] lg:w-[340px] lg:h-[340px]" style={{ transform: 'rotateX(20deg)' }}>
+            <div className="absolute inset-0 m-auto w-[210px] h-[210px] sm:w-[265px] sm:h-[265px] lg:w-[340px] lg:h-[340px]" style={{ transform: 'rotateX(20deg)' }}>
                 <div 
                     className="absolute inset-0 rounded-full overflow-hidden shadow-2xl" 
                     style={{ transform: `rotate(${rotation}deg)`, transition: `transform ${spinDuration}ms cubic-bezier(0.15, 0.6, 0.2, 1)` }}
@@ -115,7 +115,7 @@ const RouletteWheel3D: React.FC<{rotation: number; lastNumber: number | null; sp
             </div>
 
             {/* Pointer Pin */}
-            <div className="absolute top-0 left-1/2 z-30 drop-shadow-md" style={{ transform: 'translateX(-50%) rotateX(20deg) translateY(4px)' }}>
+            <div className="absolute top-[3%] left-1/2 z-30 drop-shadow-md" style={{ transform: 'translateX(-50%) rotateX(20deg)' }}>
                 <div className="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[14px] border-t-yellow-400 filter drop-shadow" />
             </div>
             
