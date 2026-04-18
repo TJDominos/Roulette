@@ -10,7 +10,7 @@ export const getNumberColor = (num: number): string => {
 export const getChipColor = (value: number) => {
   if (value === 1) return 'bg-gray-300 text-gray-900 ring-gray-400'; 
   if (value === 2) return 'bg-blue-600 text-white ring-blue-400';
-  if (value === 5) return 'bg-white text-gray-900 ring-yellow-500';
+  if (value === 5) return 'bg-purple-600 text-white ring-purple-400';
   if (value === 10) return 'bg-red-600 text-white ring-red-400';
   if (value === 20) return 'bg-emerald-600 text-white ring-emerald-400';
   return 'bg-gray-500';

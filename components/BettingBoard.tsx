@@ -89,9 +89,9 @@ const BettingBoard: React.FC<{bets: Record<string, number>; onBet: (id: string) 
     const BORDER_COLOR = 'border-slate-500/50';
 
     return (
-        <div className="w-full relative select-none">
+        <div className="w-full relative select-none lg:h-full">
             {/* Aspect ratio tuned for new layout: 3 rows full height, 2 rows half height */}
-            <div className={`w-full aspect-[14/7] sm:aspect-[14/5] bg-[#0f172a] rounded-lg shadow-2xl ring-4 ring-slate-800 transition-all duration-300 border-2 ${BORDER_COLOR}`}>
+            <div className={`w-full lg:h-full aspect-[14/7] sm:aspect-[14/5] lg:aspect-auto bg-[#0f172a] rounded-lg shadow-2xl ring-4 ring-slate-800 transition-all duration-300 border-2 ${BORDER_COLOR}`}>
                 <div className="w-full h-full grid grid-cols-[1fr_repeat(12,1fr)_1fr] grid-rows-[repeat(3,1fr)_0.5fr_0.5fr] rounded-lg overflow-hidden">
                     
                     {/* Zero - spans 3 number rows */}

@@ -1,7 +1,12 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { ShieldCheck, Link, MessageCircle, Gamepad2 } from 'lucide-react';
 import { NavBar, LiveFeed, BalanceBar, HistoryPanel, ControlPanel, StatsOverlay } from './components/UI';
 import BettingBoard from './components/BettingBoard';
 import RouletteWheel3D from './components/RouletteWheel3D';
+import { CommentsPanel, CommentsMobileButton, CommentsDesktopButton } from './components/CommentsPanel';
+import { FloatingCommentsOverlay } from './components/FloatingCommentsOverlay';
+import { PlayBoardPanel, PlayBoardMobileButton, PlayBoardDesktopButton } from './components/PlayBoardPanel';
+import { RankPanel, RankMobileButton, RankDesktopButton } from './components/RankWidget';
 import { GamePhase, PlayerBet, BetAction, GameRecord, GameStats } from './types';
 import { WHEEL_NUMBERS, CHIP_VALUES, BOT_NAMES } from './constants';
 import { calculateWinnings, prepareBetsForBackend } from './utils';
@@ -32,8 +37,15 @@ const App = () => {
     const [muted, setMuted] = useState(false);
     const [showRec, setShowRec] = useState(false);
     const [showStats, setShowStats] = useState(false); // Stats Overlay State
+    const [isCommentsOpen, setIsCommentsOpen] = useState(false);
+    const [isFloatingCommentsEnabled, setIsFloatingCommentsEnabled] = useState(true);
+    const [isPlayBoardOpen, setIsPlayBoardOpen] = useState(false);
+    const [isRankOpen, setIsRankOpen] = useState(false);
     const [records, setRecords] = useState<GameRecord[]>([]);
     
+    const unreadComments = 105; // Example count > 99
+    const displayUnread = unreadComments > 99 ? '99+' : unreadComments;
+
     const betTotal = betStack.reduce((s, b) => s + b.amount, 0);
     const SPIN_DURATION = 25000;
 
@@ -220,10 +232,10 @@ const App = () => {
     }, [phase, timeLeft, handleGameSequence]);
 
     return (
-        <div className="relative w-full h-screen bg-[#0f172a] text-white font-sans select-none overflow-hidden">
+        <div className={`relative w-full h-screen bg-[#0f172a] text-white font-sans select-none overflow-hidden transition-all duration-300 ${isCommentsOpen || isPlayBoardOpen || isRankOpen ? 'md:pr-[400px]' : ''}`}>
             <div className="absolute inset-0 flex flex-col overflow-x-hidden overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                 
-                <div className="flex-shrink-0 z-10 relative">
+                <div className="flex-shrink-0 z-[100] relative">
                     <NavBar 
                         onExit={() => window.location.reload()} 
                         isMuted={muted} 
@@ -238,50 +250,109 @@ const App = () => {
                         records={records}
                         showRec={showRec}
                         setShowRec={setShowRec}
+                        phase={phase}
                     />
                 </div>
 
                 {/* Content Container */}
-                <main className="flex-1 w-full max-w-[1800px] mx-auto px-2 py-0 sm:px-4 sm:py-2 lg:p-4 flex flex-col lg:flex-row items-stretch justify-center gap-1 lg:gap-8 overflow-visible">
+                <main className="flex-1 w-full max-w-[1024px] mx-auto px-2 py-0 sm:px-4 sm:py-2 lg:px-4 lg:pt-6 lg:pb-4 flex flex-col justify-start gap-1 lg:gap-4 overflow-visible">
                     
-                    {/* Left Section (Wheel & Stats) */}
-                    <div className="flex-shrink-0 flex flex-col items-center lg:items-center z-50 relative lg:w-[500px] lg:gap-4">
-                        <div className="flex-1 flex items-center justify-center w-full h-[200px] sm:h-[230px] md:h-[280px] lg:h-[360px] my-2 sm:my-4 lg:my-0">
+                    {/* Top Row (Wheel & Board) */}
+                    <div className="flex flex-col lg:flex-row items-center justify-center gap-1 lg:gap-8 w-full">
+                        {/* Wheel */}
+                        <div className="flex-shrink-0 flex items-center justify-center w-full lg:w-[380px] h-[200px] sm:h-[230px] md:h-[280px] lg:h-[368px] my-2 sm:my-4 lg:my-0 z-50 relative">
                             <div className="transform scale-[0.85] sm:scale-75 md:scale-90 lg:scale-95 xl:scale-100 transition-transform duration-500 origin-center">
                                 <RouletteWheel3D rotation={rotation} lastNumber={lastNum} spinDuration={SPIN_DURATION} />
                             </div>
+
+                            {/* Floating Comments overlay specific to wheel zone */}
+                            <FloatingCommentsOverlay isEnabled={isFloatingCommentsEnabled} />
+
+                            {/* Side Buttons - Mobile */}
+                            <div className="md:hidden absolute right-0 top-1/2 -translate-y-1/2 flex flex-col gap-2 z-40">
+                                <CommentsMobileButton 
+                                    onClick={() => setIsCommentsOpen(true)} 
+                                    unreadCount={unreadComments} 
+                                />
+                                <PlayBoardMobileButton 
+                                    onClick={() => setIsPlayBoardOpen(true)} 
+                                />
+                                <RankMobileButton 
+                                    onClick={() => setIsRankOpen(true)}
+                                />
+                            </div>
                         </div>
                         
-                        <div className="hidden lg:block w-full mt-auto">
-                            <HistoryPanel history={history} stats={stats} onShowStats={() => setShowStats(true)} />
-                        </div>
-                    </div>
-
-                    {/* Right Section (Board & Controls) */}
-                    <div className="shrink-0 lg:flex-1 w-full max-w-[700px] mx-auto lg:mx-0 flex flex-col gap-1.5 sm:gap-3 lg:gap-6 lg:h-auto justify-center lg:justify-end z-10 pb-1 lg:pb-0">
-                        <div className="lg:hidden w-full">
-                            <HistoryPanel history={history} stats={stats} onShowStats={() => setShowStats(true)} />
+                        {/* Mobile History */}
+                        <div className="lg:hidden w-full max-w-[700px] mx-auto mb-1.5 sm:mb-3 relative z-[60]">
+                            <HistoryPanel history={history} stats={stats} />
                         </div>
 
-                        <div className="w-full flex items-center justify-center min-h-0">
+                        {/* Board */}
+                        <div className="shrink-0 lg:flex-1 w-full max-w-[700px] lg:max-w-none mx-auto lg:mx-0 flex items-center justify-start min-h-0 lg:h-[320px] z-10 action-area">
                             <BettingBoard bets={bets} onBet={placeBet} phase={phase} />
                         </div>
+                    </div>
 
-                        <ControlPanel 
-                            chip={chip} 
-                            setChip={setChip} 
-                            undo={undo} 
-                            clear={clear} 
-                            phase={phase}
-                            hasBets={betTotal > 0}
-                            timeLeft={timeLeft}
-                            maxTime={BETTING_TIME}
-                        />
+                    {/* Bottom Row (History & Controls) */}
+                    <div className="flex flex-col lg:flex-row items-center lg:items-end justify-center gap-1.5 sm:gap-3 lg:gap-8 w-full relative z-[60]">
+                        {/* Desktop History */}
+                        <div className="hidden lg:block w-[380px] flex-shrink-0">
+                            <HistoryPanel history={history} stats={stats} />
+                        </div>
+
+                        {/* Controls */}
+                        <div className="w-full max-w-[700px] lg:max-w-none lg:flex-1 mx-auto lg:mx-0 action-area">
+                            <ControlPanel 
+                                chip={chip} 
+                                setChip={setChip} 
+                                undo={undo} 
+                                clear={clear} 
+                                phase={phase}
+                                hasBets={betTotal > 0}
+                                timeLeft={timeLeft}
+                                maxTime={BETTING_TIME}
+                            />
+                        </div>
+                    </div>
+
+                    {/* Footer Labels */}
+                    <div className="flex items-center justify-center gap-6 mt-4 mb-8 text-xs font-medium text-gray-500">
+                        <div className="flex items-center gap-1.5">
+                            <ShieldCheck size={14} className="text-emerald-500/70" />
+                            <span>RTP 97.5%</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                            <Link size={14} className="text-blue-500/70 animate-heartbeat" />
+                            <span>On-chain Randomness</span>
+                        </div>
                     </div>
                 </main>
+            </div>
 
-                {/* Render StatsOverlay at root level to ensure it sits on top of everything */}
-                {showStats && <StatsOverlay stats={stats} onClose={() => setShowStats(false)} />}
+            {/* Panels */}
+            <CommentsPanel 
+                isOpen={isCommentsOpen} 
+                onClose={() => setIsCommentsOpen(false)} 
+                isFloatingEnabled={isFloatingCommentsEnabled}
+                onToggleFloating={(enabled) => setIsFloatingCommentsEnabled(enabled)}
+            />
+            <PlayBoardPanel isOpen={isPlayBoardOpen} onClose={() => setIsPlayBoardOpen(false)} />
+            <RankPanel isOpen={isRankOpen} onClose={() => setIsRankOpen(false)} />
+
+            {/* Side Buttons - Desktop */}
+            <div className={`hidden md:flex fixed top-1/2 -translate-y-1/2 flex-col gap-3 z-40 transition-all duration-300 ${isCommentsOpen || isPlayBoardOpen || isRankOpen ? 'right-[-100px] opacity-0 pointer-events-none' : 'right-0 opacity-100'}`}>
+                <CommentsDesktopButton 
+                    onClick={() => setIsCommentsOpen(true)} 
+                    isOpen={isCommentsOpen} 
+                    unreadCount={unreadComments} 
+                />
+                <PlayBoardDesktopButton 
+                    onClick={() => setIsPlayBoardOpen(true)} 
+                />
+                <RankDesktopButton 
+                    onClick={() => setIsRankOpen(true)}
+                />
             </div>
         </div>
     );
